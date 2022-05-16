@@ -27,14 +27,20 @@ class Board
     @data_array[column][row] = symbol if @data_array[column][row].nil?
   end
 
-  def check_for_win(column, row)
-    check_for_row_win(column, row) ||
-      check_for_col_win(column, row) ||
-      check_for_left_diag_win(column, row) ||
-      check_for_right_diag_win(column, row)
+  def win?(column, row)
+    row_win?(column, row) ||
+      col_win?(column, row) ||
+      left_diag_win?(column, row) ||
+      right_diag_win?(column, row)
   end
 
-  # Check for tie needed
+  def tie?
+    @data_array.any? do |col|
+      col.none?(&:nil?)
+    end
+    # Possibly add a method for checking whether a win is possible
+    # even with empty spaces
+  end
 
   private
 
@@ -45,7 +51,7 @@ class Board
     0
   end
 
-  def check_for_row_win(column, row)
+  def row_win?(column, row)
     pieces_in_a_row = 1
     symbol = @data_array[column][row]
     pieces_in_a_row += check_to_left(column, row, symbol)
@@ -71,7 +77,7 @@ class Board
     pieces_to_right
   end
 
-  def check_for_col_win(column, row)
+  def col_win?(column, row)
     pieces_in_a_row = 1
     symbol = @data_array[column][row]
     while @data_array[column][row - 1] == symbol # Check down
@@ -82,7 +88,7 @@ class Board
     pieces_in_a_row >= 4
   end
 
-  def check_for_left_diag_win(column, row)
+  def left_diag_win?(column, row)
     pieces_in_a_row = 1
     symbol = @data_array[column][row]
     pieces_in_a_row += check_to_upper_left(column, row, symbol)
@@ -110,7 +116,7 @@ class Board
     pieces_to_lower_right
   end
 
-  def check_for_right_diag_win(column, row)
+  def right_diag_win?(column, row)
     pieces_in_a_row = 1
     symbol = @data_array[column][row]
     pieces_in_a_row += check_to_lower_left(column, row, symbol)
