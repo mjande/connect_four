@@ -143,14 +143,43 @@ describe Board do
       end
     end
 
-    context 'there is a diagonal win' do
-      subject(:diag_win) { described_class.win }
+    context 'there is a left diagonal win' do
+      subject(:diag_win) { described_class.new }
 
       before do
-        diag_win.add_piece(1, '○')
-        2.times { diag_win.add_piece(2, '○') }
-        3.times { diag_win.add_piece(3, '○') }
-        4.times { diag_win.add_piece(4, '○') }
+        1.upto(3) { |col| diag_win.add_piece(col, '●') }
+        1.upto(2) { |col| diag_win.add_piece(col, '●') }
+        diag_win.add_piece(1, '●')
+        1.upto(4) { |col| diag_win.add_piece(col, '○') }
+      end
+
+      context 'from bottom of diagonal' do
+        it 'returns true' do
+          expect(diag_win.check_for_win(4, 0)).to be_truthy
+        end
+      end
+
+      context 'from top of diagonal' do
+        it 'returns true' do
+          expect(diag_win.check_for_win(1, 3)).to be_truthy
+        end
+      end
+
+      context 'from middle of diagonal' do
+        it 'returns true' do
+          expect(diag_win.check_for_win(2, 2)).to be_truthy
+        end
+      end
+    end
+
+    context 'there is a right diagonal win' do
+      subject(:diag_win) { described_class.new }
+
+      before do
+        2.upto(4) { |col| diag_win.add_piece(col, '●') }
+        3.upto(4) { |col| diag_win.add_piece(col, '●') }
+        diag_win.add_piece(4, '●')
+        1.upto(4) { |col| diag_win.add_piece(col, '○') }
       end
 
       context 'from bottom of diagonal' do

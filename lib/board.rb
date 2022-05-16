@@ -28,7 +28,9 @@ class Board
 
   def check_for_win(column, row)
     check_for_row_win(column, row) || 
-    check_for_col_win(column, row) 
+    check_for_col_win(column, row) ||
+    check_for_left_diag_win(column, row) ||
+    check_for_right_diag_win(column, row)
   end
 
   # Check for tie needed
@@ -47,15 +49,15 @@ class Board
   def check_for_row_win(column, row)
     pieces_in_a_row = 1
     symbol = @data_array[column][row]
-    original_column = column
-    while @data_array[column - 1][row] == symbol # Check left
+    last_col = column
+    while @data_array[last_col - 1][row] == symbol # Check left
       pieces_in_a_row += 1
-      column -= 1
+      last_col -= 1
     end
-    column = original_column
-    while @data_array[column + 1][row] == symbol # Check right
+    last_col = column
+    while @data_array[last_col + 1][row] == symbol # Check right
       pieces_in_a_row += 1
-      column += 1
+      last_col += 1
     end
     pieces_in_a_row >= 4
   end
@@ -68,6 +70,46 @@ class Board
       row -= 1
     end
     # No need to check from middle or bottom, due to Connect Four rules
+    pieces_in_a_row >= 4
+  end
+
+  def check_for_left_diag_win(column, row)
+    pieces_in_a_row = 1
+    symbol = @data_array[column][row]
+    last_col = column
+    last_row = row
+    while @data_array[last_col - 1][last_row + 1] == symbol
+      pieces_in_a_row += 1
+      last_col -= 1 
+      last_row += 1
+    end
+    last_col = column
+    last_row = row
+    while @data_array[last_col + 1][last_row - 1] == symbol
+      pieces_in_a_row += 1
+      last_col += 1
+      last_row -= 1
+    end
+    pieces_in_a_row >= 4
+  end
+
+  def check_for_right_diag_win(column, row)
+    pieces_in_a_row = 1
+    symbol = @data_array[column][row]
+    last_col = column
+    last_row = row
+    while @data_array[last_col - 1][last_row - 1] == symbol
+      pieces_in_a_row += 1
+      last_col -= 1 
+      last_row -= 1
+    end
+    last_col = column
+    last_row = row
+    while @data_array[last_col + 1][last_row + 1] == symbol
+      pieces_in_a_row += 1
+      last_col += 1
+      last_row += 1
+    end
     pieces_in_a_row >= 4
   end
 end
