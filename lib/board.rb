@@ -22,8 +22,14 @@ class Board
     end
   end
 
-  def add_piece(column, symbol)
-    row = find_empty_row(column)
+  def find_empty_row(column)
+    0.upto(5) do |row|
+      return row if @data_array[column][row].nil?
+    end
+    nil
+  end
+
+  def add_piece(column, row, symbol)
     @data_array[column][row] = symbol if @data_array[column][row].nil?
   end
 
@@ -42,14 +48,9 @@ class Board
     # even with empty spaces
   end
 
-  private
 
-  def find_empty_row(column)
-    6.downto(0) do |row|
-      return row + 1 unless @data_array[column][row].nil?
-    end
-    0
-  end
+
+  private
 
   def row_win?(column, row)
     pieces_in_a_row = 1

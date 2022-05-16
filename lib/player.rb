@@ -3,6 +3,8 @@
 # The Player class handles interactions and inputs from the player throughout
 # the game
 class Player
+  attr_reader :name, :symbol, :number
+
   def welcome
     puts "let's play Connect Four!"
   end
@@ -10,6 +12,7 @@ class Player
   def assign_name(player_num)
     puts "Player ##{player_num}: Please type your name below."
     @name = gets.chomp
+    @number = player_num
   end
 
   def assign_symbol(player_num)
