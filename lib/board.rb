@@ -1,36 +1,37 @@
+# frozen_string_literal: true
+
+# Board class stores an array containing all the positions on the board, and
+# contains methods for displaying, editing, and checking that board data array
 class Board
   attr_reader :data_array
-  
+
   def initialize
-    @data_array = Array.new(7) { Array.new(6) } 
+    @data_array = Array.new(7) { Array.new(6) }
   end
 
-  def display 
+  def display
     5.downto(0) do |row|
       7.times do |col|
         if data_array[col][row].nil?
-          print "|   "
+          print '|   '
         else
           print "| #{@data_array[col][row]} "
         end
       end
-      puts "|"
-      puts "-----------------------------"
-    end 
+      puts "|\n-----------------------------"
+    end
   end
 
   def add_piece(column, symbol)
     row = find_empty_row(column)
-    if @data_array[column][row].nil?
-      @data_array[column][row] = symbol 
-    end
+    @data_array[column][row] = symbol if @data_array[column][row].nil?
   end
 
   def check_for_win(column, row)
-    check_for_row_win(column, row) || 
-    check_for_col_win(column, row) ||
-    check_for_left_diag_win(column, row) ||
-    check_for_right_diag_win(column, row)
+    check_for_row_win(column, row) ||
+      check_for_col_win(column, row) ||
+      check_for_left_diag_win(column, row) ||
+      check_for_right_diag_win(column, row)
   end
 
   # Check for tie needed
@@ -39,27 +40,35 @@ class Board
 
   def find_empty_row(column)
     6.downto(0) do |row|
-      if !@data_array[column][row].nil?
-        return row + 1
-      end
+      return row + 1 unless @data_array[column][row].nil?
     end
     0
-  end 
+  end
 
   def check_for_row_win(column, row)
     pieces_in_a_row = 1
     symbol = @data_array[column][row]
-    last_col = column
-    while @data_array[last_col - 1][row] == symbol # Check left
-      pieces_in_a_row += 1
-      last_col -= 1
-    end
-    last_col = column
-    while @data_array[last_col + 1][row] == symbol # Check right
-      pieces_in_a_row += 1
-      last_col += 1
-    end
+    pieces_in_a_row += check_to_left(column, row, symbol)
+    pieces_in_a_row += check_to_right(column, row, symbol)
     pieces_in_a_row >= 4
+  end
+
+  def check_to_left(column, row, symbol)
+    pieces_to_left = 0
+    while @data_array[column - 1][row] == symbol
+      pieces_to_left += 1
+      column -= 1
+    end
+    pieces_to_left
+  end
+
+  def check_to_right(column, row, symbol)
+    pieces_to_right = 0
+    while @data_array[column + 1][row] == symbol
+      pieces_to_right += 1
+      column += 1
+    end
+    pieces_to_right
   end
 
   def check_for_col_win(column, row)
@@ -76,50 +85,56 @@ class Board
   def check_for_left_diag_win(column, row)
     pieces_in_a_row = 1
     symbol = @data_array[column][row]
-    last_col = column
-    last_row = row
-    while @data_array[last_col - 1][last_row + 1] == symbol
-      pieces_in_a_row += 1
-      last_col -= 1 
-      last_row += 1
-    end
-    last_col = column
-    last_row = row
-    while @data_array[last_col + 1][last_row - 1] == symbol
-      pieces_in_a_row += 1
-      last_col += 1
-      last_row -= 1
-    end
+    pieces_in_a_row += check_to_upper_left(column, row, symbol)
+    pieces_in_a_row += check_to_lower_right(column, row, symbol)
     pieces_in_a_row >= 4
+  end
+
+  def check_to_upper_left(column, row, symbol)
+    pieces_to_upper_left = 0
+    while @data_array[column - 1][row + 1] == symbol
+      pieces_to_upper_left += 1
+      column -= 1
+      row += 1
+    end
+    pieces_to_upper_left
+  end
+
+  def check_to_lower_right(column, row, symbol)
+    pieces_to_lower_right = 0
+    while @data_array[column + 1][row - 1] == symbol
+      pieces_to_lower_right += 1
+      column += 1
+      row -= 1
+    end
+    pieces_to_lower_right
   end
 
   def check_for_right_diag_win(column, row)
     pieces_in_a_row = 1
     symbol = @data_array[column][row]
-    last_col = column
-    last_row = row
-    while @data_array[last_col - 1][last_row - 1] == symbol
-      pieces_in_a_row += 1
-      last_col -= 1 
-      last_row -= 1
-    end
-    last_col = column
-    last_row = row
-    while @data_array[last_col + 1][last_row + 1] == symbol
-      pieces_in_a_row += 1
-      last_col += 1
-      last_row += 1
-    end
+    pieces_in_a_row += check_to_lower_left(column, row, symbol)
+    pieces_in_a_row += check_to_upper_right(column, row, symbol)
     pieces_in_a_row >= 4
   end
-end
 
-=begin
-mid_row_win = Board.new
-mid_row_win.create
-mid_row_win.add_piece(0, '○')
-mid_row_win.add_piece(1, '○')
-mid_row_win.add_piece(3, '○')
-mid_row_win.add_piece(2, '○')
-mid_row_win.check_for_win(2, 0)
-=end
+  def check_to_lower_left(column, row, symbol)
+    pieces_to_lower_left = 0
+    while @data_array[column - 1][row - 1] == symbol
+      pieces_to_lower_left += 1
+      column -= 1
+      row -= 1
+    end
+    pieces_to_lower_left
+  end
+
+  def check_to_upper_right(column, row, symbol)
+    pieces_to_upper_right = 0
+    while @data_array[column + 1][row + 1] == symbol
+      pieces_to_upper_right += 1
+      column += 1
+      row += 1
+    end
+    pieces_to_upper_right
+  end
+end
