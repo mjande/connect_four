@@ -71,7 +71,7 @@ class Board
 
   def check_to_right(column, row, symbol)
     pieces_to_right = 0
-    while @data_array[column + 1][row] == symbol
+    while !@data_array[column + 1].nil? && @data_array[column + 1][row] == symbol
       pieces_to_right += 1
       column += 1
     end
@@ -109,7 +109,7 @@ class Board
 
   def check_to_lower_right(column, row, symbol)
     pieces_to_lower_right = 0
-    while @data_array[column + 1][row - 1] == symbol
+    while !@data_array[column + 1].nil? && @data_array[column + 1][row - 1] == symbol
       pieces_to_lower_right += 1
       column += 1
       row -= 1
@@ -137,7 +137,7 @@ class Board
 
   def check_to_upper_right(column, row, symbol)
     pieces_to_upper_right = 0
-    while @data_array[column + 1][row + 1] == symbol
+    while !@data_array[column + 1].nil? && @data_array[column + 1][row + 1] == symbol
       pieces_to_upper_right += 1
       column += 1
       row += 1

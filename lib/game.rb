@@ -13,29 +13,30 @@ class Game
     @player1.assign_name(1)
     @player1.assign_symbol
     @player2.assign_name(2)
-    @player2.assign_symbol(2)
+    @player2.assign_symbol
     play_game
   end
 
   def play_game
     player = @player1
     loop do
-      col = player.turn_input(player.number)
+      @board.display
+      col = player.turn_input
       row = @board.find_empty_row(col)
       @board.add_piece(col, row, player.symbol)
-
-      break if @board.win?(col = 0, row = 0) || @board.tie?
+      break if @board.win?(col, row) || @board.tie?
 
       # Switch players between rounds
-      if player == @player1
-        player = @player2
-      else 
-        player = @player1
-      end
+      player = (player == @player1 ? @player2 : @player1)
     end
     end_game(player) 
   end
 
   def end_game(player)
+    puts "#{player.name} wins!"
+    if player.play_again?
+      @board = Board.new
+      start_game
+    end
   end
 end

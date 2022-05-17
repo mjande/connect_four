@@ -19,8 +19,9 @@ describe Player do
       subject(:player1) { described_class.new }
 
       it 'stores ○ as @symbol' do
+        player1.instance_variable_set(:@number, 1)
         allow(player1).to receive(:puts)
-        player1.assign_symbol(1)
+        player1.assign_symbol
         expect(player1.instance_variable_get(:@symbol)).to eq('○')
       end
     end
@@ -29,8 +30,9 @@ describe Player do
       subject(:player2) { described_class.new }
 
       it 'stores ● as @symbol' do
+        player2.instance_variable_set(:@number, 2)
         allow(player2).to receive(:puts)
-        player2.assign_symbol(2)
+        player2.assign_symbol
         expect(player2.instance_variable_get(:@symbol)).to eq('●')
       end
     end
@@ -45,12 +47,12 @@ describe Player do
 
     it 'returns player input' do
       allow(player).to receive(:gets).and_return(0)
-      expect(player.turn_input(1)).to eq(0)
+      expect(player.turn_input).to eq(0)
     end
 
     it 'loops until a valid response is returned' do
       allow(player).to receive(:gets).and_return(-10, 8, 4)
-      expect(player.turn_input(1)).to eq(4)
+      expect(player.turn_input).to eq(4)
     end
   end
 
