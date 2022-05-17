@@ -22,11 +22,14 @@ class Board
     end
   end
 
-  def find_empty_row(column)
-    0.upto(5) do |row|
-      return row if @data_array[column][row].nil?
+  def find_empty_row(column, player)
+    loop do
+      0.upto(5) do |row|
+        return [column, row] if @data_array[column][row].nil?
+      end
+      puts 'That column is already full. Choose a different column.'
+      column = player.turn_input
     end
-    nil
   end
 
   def add_piece(column, row, symbol)
@@ -41,14 +44,10 @@ class Board
   end
 
   def tie?
-    @data_array.any? do |col|
+    @data_array.all? do |col|
       col.none?(&:nil?)
     end
-    # Possibly add a method for checking whether a win is possible
-    # even with empty spaces
   end
-
-
 
   private
 

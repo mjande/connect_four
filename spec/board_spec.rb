@@ -66,21 +66,27 @@ describe Board do
 
   describe '#find_empty_row' do
     subject(:board) { described_class.new }
+    let(:player) { double('player', turn_input: 0) }
+
+    before do
+      allow(board).to receive(:puts)
+    end
 
     it 'returns row 0 in an empty column' do
-      expect(board.find_empty_row(0)).to eq(0)
+      expect(board.find_empty_row(0, player)).to eq([0, 0])
     end
 
     it 'returns row 3 in a column with three pieces' do
       board.add_piece(1, 0, '○')
       board.add_piece(1, 1, '○')
       board.add_piece(1, 2, '○')
-      expect(board.find_empty_row(1)).to eq(3)
+      expect(board.find_empty_row(1, player)).to eq([1, 3])
     end
 
-    it 'returns nil in a full column' do
+    it 'sends #turn_input to @player in a full column' do
       0.upto(5) { |row| board.add_piece(3, row, '○') }
-      expect(board.find_empty_row(3)).to be_nil
+      expect(player).to receive(:turn_input)
+      board.find_empty_row(3, player)
     end
   end
 
@@ -270,6 +276,14 @@ describe Board do
 
       it 'returns true' do
         expect(full_board.tie?).to be_truthy
+      end
+    end
+
+    context 'the board is not full and a win is still possible' do
+      subject(:partial_board) { described_class.new }
+
+      it 'returns false' do
+        expect(partial_board.tie?).to be_falsey
       end
     end
   end

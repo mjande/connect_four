@@ -31,6 +31,14 @@ class Player
     end
   end
 
+  def win_message
+    puts "#{@name} wins!"
+  end
+
+  def tie_message
+    puts "Tie game!"
+  end
+
   def play_again?
     puts 'Would you like to play again? (Y or N)'
     loop do
